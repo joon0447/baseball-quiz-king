@@ -1,6 +1,7 @@
 package studio.daily.baseeball_quiz.feature.createquiz.view
 
 import android.widget.Space
+import androidx.compose.animation.EnterTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -53,7 +54,7 @@ import studio.daily.baseeball_quiz.ui.theme.Pretendard
 fun CreateQuizScreen(
     viewModel: CreateQuizViewModel = viewModel(),
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit
+    onNextClick: () -> Unit,
 ) {
     val selectedDifficulty by viewModel.selectedDifficulty.collectAsState()
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()

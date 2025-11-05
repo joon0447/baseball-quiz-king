@@ -1,5 +1,8 @@
 package studio.daily.baseeball_quiz.feature.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
@@ -16,7 +19,11 @@ object Routes {
 
 @Composable
 fun AppNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = Routes.HOME) {
+    NavHost(
+        navController = navController,
+        startDestination = Routes.HOME,
+        enterTransition = { fadeIn(animationSpec = tween(0)) },
+        exitTransition = { fadeOut(animationSpec = tween(0)) }) {
         composable(Routes.HOME) {
             HomeScreen(onStartQuizClick = { navController.navigate(Routes.CREATE_QUIZ) })
         }
