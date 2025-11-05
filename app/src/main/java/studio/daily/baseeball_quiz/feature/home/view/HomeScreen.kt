@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import studio.daily.baseeball_quiz.R
+import studio.daily.baseeball_quiz.ui.theme.Blue20
 import studio.daily.baseeball_quiz.ui.theme.Pretendard
 
 @Composable
@@ -33,7 +34,7 @@ fun HomeScreen(onStartQuizClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF1976D2))
+            .background(Blue20)
     ) {
         Column(
             modifier = Modifier

@@ -44,6 +44,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import studio.daily.baseeball_quiz.feature.createquiz.model.Difficulty
 import studio.daily.baseeball_quiz.feature.createquiz.viewmodel.CreateQuizViewModel
+import studio.daily.baseeball_quiz.ui.theme.Blue40
+import studio.daily.baseeball_quiz.ui.theme.Blue80
+import studio.daily.baseeball_quiz.ui.theme.Gray40
 import studio.daily.baseeball_quiz.ui.theme.Pretendard
 
 @Composable
@@ -136,8 +139,8 @@ private fun DifficultyOptionCard(
     isSelected: Boolean,
     onClick: () -> Unit
 ) {
-    val borderColor = if (isSelected) Color(0xFF2196F3) else Color.LightGray
-    val backgroundColor = if (isSelected) Color(0xFFDAE9F5) else Color(0xFFF7F7F7)
+    val borderColor = if (isSelected) Blue80 else Color.LightGray
+    val backgroundColor = if (isSelected) Blue40 else Gray40
 
     Row(
         modifier = Modifier
@@ -173,7 +176,7 @@ private fun DifficultyOptionCard(
         RadioButton(
             selected = isSelected, onClick = onClick,
             colors = RadioButtonDefaults.colors(
-                selectedColor = Color(0xFF2196F3),     // 선택된 상태의 색상
+                selectedColor = Blue80,     // 선택된 상태의 색상
                 unselectedColor = Color.Gray,          // 선택 안 된 상태의 테두리 색상
                 disabledSelectedColor = Color.LightGray,
                 disabledUnselectedColor = Color.LightGray
