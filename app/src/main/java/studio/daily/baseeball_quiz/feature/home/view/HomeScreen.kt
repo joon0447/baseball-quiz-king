@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import studio.daily.baseeball_quiz.R
+import studio.daily.baseeball_quiz.ui.theme.Pretendard
 
 @Composable
 fun HomeScreen(onStartQuizClick: () -> Unit) {
@@ -51,12 +52,14 @@ fun HomeScreen(onStartQuizClick: () -> Unit) {
             Text(
                 text = "야구 상식왕",
                 fontSize = 28.sp,
+                fontFamily = Pretendard,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
             )
             Text(
                 text = "당신의 야구 지식을 테스트 해보세요!",
                 fontSize = 16.sp,
+                fontFamily = Pretendard,
                 fontWeight = FontWeight.Medium,
                 color = Color.White
             )
@@ -76,6 +79,7 @@ fun HomeScreen(onStartQuizClick: () -> Unit) {
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = "랜덤 퀴즈 시작",
+                    fontFamily = Pretendard,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
