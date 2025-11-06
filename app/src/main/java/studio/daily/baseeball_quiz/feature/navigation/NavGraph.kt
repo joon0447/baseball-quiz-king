@@ -7,14 +7,20 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import studio.daily.baseeball_quiz.feature.createquiz.model.Difficulty
 import studio.daily.baseeball_quiz.feature.createquiz.view.CreateQuizScreen
 import studio.daily.baseeball_quiz.feature.home.view.HomeScreen
+import studio.daily.baseeball_quiz.feature.quiz.view.QuizScreen
 
 object Routes {
     const val HOME = "home"
     const val CREATE_QUIZ = "create_quiz"
+    const val QUIZ = "quiz"
+    const val PARAM_DIFFICULTY = "difficulty"
 }
 
 @Composable
@@ -31,7 +37,21 @@ fun AppNavGraph(navController: NavHostController) {
         composable(Routes.CREATE_QUIZ) {
             CreateQuizScreen(
                 onBackClick = { navController.popBackStack() },
-                onNextClick = {}
+                onNextClick = { difficulty -> navController.navigate("${Routes.QUIZ}/${difficulty.name}")}
+            )
+        }
+
+        composable(
+            route = "${Routes.QUIZ}/{${Routes.PARAM_DIFFICULTY}}",
+            arguments = listOf(navArgument(Routes.PARAM_DIFFICULTY) {
+                type = NavType.StringType
+            })
+        ) { backStackEntry ->
+            val difficultyStr = backStackEntry.arguments?.getString(Routes.PARAM_DIFFICULTY)
+            val difficulty = Difficulty.valueOf(difficultyStr ?: Difficulty.NORMAL.name)
+            QuizScreen(
+                difficulty = difficulty,
+                onBackClick = { navController.popBackStack() }
             )
         }
     }
