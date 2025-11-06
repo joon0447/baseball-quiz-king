@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import studio.daily.baseeball_quiz.feature.createquiz.model.Difficulty
 import studio.daily.baseeball_quiz.feature.createquiz.viewmodel.CreateQuizViewModel
+import studio.daily.baseeball_quiz.ui.theme.Blue20
 import studio.daily.baseeball_quiz.ui.theme.Blue40
 import studio.daily.baseeball_quiz.ui.theme.Blue80
 import studio.daily.baseeball_quiz.ui.theme.Gray40
@@ -54,7 +55,7 @@ import studio.daily.baseeball_quiz.ui.theme.Pretendard
 fun CreateQuizScreen(
     viewModel: CreateQuizViewModel = viewModel(),
     onBackClick: () -> Unit,
-    onNextClick: () -> Unit,
+    onNextClick: (Difficulty) -> Unit,
 ) {
     val selectedDifficulty by viewModel.selectedDifficulty.collectAsState()
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -66,7 +67,7 @@ fun CreateQuizScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF1976D2))
+                .background(Blue20)
                 .padding(top = statusBarHeight)
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -118,7 +119,7 @@ fun CreateQuizScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                onClick = onNextClick, modifier = Modifier
+                onClick = {onNextClick(selectedDifficulty)}, modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
