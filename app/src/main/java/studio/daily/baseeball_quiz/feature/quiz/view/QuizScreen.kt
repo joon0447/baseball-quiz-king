@@ -45,12 +45,12 @@ import studio.daily.baseeball_quiz.ui.theme.Blue80
 import studio.daily.baseeball_quiz.ui.theme.Pretendard
 
 
-
 @Composable
 fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
     val viewModel = remember { QuizViewModel(difficulty) }
     val selectedOption by viewModel.selectedOption.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
+    val isAnswerRevealed by viewModel.isAnswerRevealed.collectAsState()
 
     val quiz = viewModel.currentQuiz
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
@@ -74,20 +74,25 @@ fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
                     Icon(Icons.Default.ArrowBack, contentDescription = "뒤로가기", tint = Color.White)
                 }
                 Spacer(Modifier.width(8.dp))
-                Text("문제",
+                Text(
+                    "문제",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = Pretendard,
-                    color = Color.White)
+                    color = Color.White
+                )
             }
         }
-        Column (
+        Column(
             modifier = Modifier.padding(28.dp)
-        ){
+        ) {
             Spacer(Modifier.height(16.dp))
 
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(text = viewModel.getQuizNumberText())
                 Spacer(Modifier.weight(1f))
                 Text(text = "진행률: ${(viewModel.getProgress() * 100).toInt()}%")
@@ -117,8 +122,28 @@ fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
             // 보기들
             quiz.options.forEachIndexed { index, option ->
                 val isSelected = selectedOption == index
-                val borderColor = if (isSelected) Color(0xFF2196F3) else Color.LightGray
-                val bgColor = if (isSelected) Color(0xFFE3F2FD) else Color(0xFFF8F9FA)
+                val isCorrect = index ==quiz.answerIndex
+                val borderColor: Color
+                val bgColor:Color
+
+                if (isAnswerRevealed) {
+                    if(isSelected && isCorrect) {
+                        borderColor = Color(0xFF4CAF50)
+                        bgColor = Color(0xFFE8F5E9)
+                    } else if(isSelected && !isCorrect) {
+                        borderColor = Color(0xFFF44336) // 빨강
+                        bgColor = Color(0xFFFFEBEE)
+                    } else if(isCorrect) {
+                        borderColor = Color(0xFF4CAF50)
+                        bgColor = Color(0xFFE8F5E9)
+                    } else {
+                        borderColor = Color.LightGray
+                        bgColor = Color(0xFFF8F9FA)
+                    }
+                } else {
+                    borderColor = if (isSelected) Color(0xFF2196F3) else Color.LightGray
+                    bgColor = if (isSelected) Color(0xFFE3F2FD) else Color(0xFFF8F9FA)
+                }
 
                 Row(
                     modifier = Modifier
@@ -135,13 +160,23 @@ fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
                 Spacer(Modifier.height(12.dp))
             }
 
+            if(isAnswerRevealed) {
+               Spacer(Modifier.height(16.dp))
+               Text(text = "해설", fontSize = 16.sp, fontWeight = FontWeight.Bold, color = Color(0xFF2196F3))
+               Spacer(Modifier.height(8.dp))
+               Text(text = quiz.explanation, fontSize = 14.sp, color = Color.DarkGray)
+            }
+
             Spacer(modifier = Modifier.weight(1f))
 
             // 정답 확인하기
             Button(
                 onClick = {
-                    // TODO: 정답 확인 후 다음 문제 or 정답 해설로 이동
-                    viewModel.nextQuestion()
+                    if(isAnswerRevealed) {
+                        viewModel.nextQuestion()
+                    } else{
+                        viewModel.revealAnswer()
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -149,7 +184,7 @@ fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3))
             ) {
                 Text(
-                    text = "정답 확인하기",
+                    text = if (isAnswerRevealed) "다음 문제로" else "정답 확인하기",
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
