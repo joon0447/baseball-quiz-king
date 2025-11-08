@@ -7,7 +7,7 @@ import studio.daily.baseeball_quiz.core.data.repository.QuizRepository
 import studio.daily.baseeball_quiz.core.model.Quiz
 import studio.daily.baseeball_quiz.feature.createquiz.model.Difficulty
 
-class QuizViewModel(difficulty: Difficulty): ViewModel() {
+class QuizViewModel(difficulty: Difficulty) : ViewModel() {
 
     private val _quizList = QuizRepository
         .getQuizzesByDifficulty(difficulty)
@@ -28,13 +28,16 @@ class QuizViewModel(difficulty: Difficulty): ViewModel() {
 
     private var correctAnswerCount = 0
 
+    private val _isQuizFinished = MutableStateFlow(false)
+    val isQuizFinished: StateFlow<Boolean> = _isQuizFinished
+
     fun selectOption(index: Int) {
         _selectedOption.value = index
     }
 
     fun revealAnswer() {
-        if(!_isAnswerRevealed.value) {
-            if(_selectedOption.value == currentQuiz.answerIndex) {
+        if (!_isAnswerRevealed.value) {
+            if (_selectedOption.value == currentQuiz.answerIndex) {
                 correctAnswerCount++
             }
         }
@@ -42,10 +45,12 @@ class QuizViewModel(difficulty: Difficulty): ViewModel() {
     }
 
     fun nextQuestion() {
-        if(_currentIndex.value < _quizList.size -1) {
+        if (_currentIndex.value < _quizList.size - 1) {
             _currentIndex.value++
             _selectedOption.value = null
             _isAnswerRevealed.value = false
+        } else {
+            _isQuizFinished.value = true
         }
     }
 
@@ -56,4 +61,9 @@ class QuizViewModel(difficulty: Difficulty): ViewModel() {
     fun getQuizNumberText(): String {
         return "문제 ${_currentIndex.value + 1}/${_quizList.size}"
     }
+
+    fun getCorrectAnswerCount(): Int {
+        return correctAnswerCount
+    }
+
 }

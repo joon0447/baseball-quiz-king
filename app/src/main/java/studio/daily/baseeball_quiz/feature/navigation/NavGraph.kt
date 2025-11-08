@@ -15,6 +15,7 @@ import studio.daily.baseeball_quiz.feature.createquiz.model.Difficulty
 import studio.daily.baseeball_quiz.feature.createquiz.view.CreateQuizScreen
 import studio.daily.baseeball_quiz.feature.home.view.HomeScreen
 import studio.daily.baseeball_quiz.feature.quiz.view.QuizScreen
+import studio.daily.baseeball_quiz.feature.result.view.ResultScreen
 
 object Routes {
     const val HOME = "home"
@@ -51,7 +52,27 @@ fun AppNavGraph(navController: NavHostController) {
             val difficulty = Difficulty.valueOf(difficultyStr ?: Difficulty.NORMAL.name)
             QuizScreen(
                 difficulty = difficulty,
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onQuizFinished = {correctCount, totalCount ->
+                    navController.navigate("result?correct=$correctCount&total=$totalCount")
+                }
+            )
+        }
+
+        composable(
+            route = "result?correct={correct}&total={total}",
+            arguments = listOf(
+                navArgument("correct") { type = NavType.IntType },
+                navArgument("total") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val correct = backStackEntry.arguments?.getInt("correct") ?: 0
+            val total = backStackEntry.arguments?.getInt("total") ?: 10
+            ResultScreen(
+                correctCount = correct,
+                totalCount = total,
+                onRetryClick = { navController.navigate("quiz?difficulty=medium") },
+                onHomeClick = { navController.popBackStack("home", inclusive = false) }
             )
         }
     }

@@ -27,6 +27,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -46,14 +47,21 @@ import studio.daily.baseeball_quiz.ui.theme.Pretendard
 
 
 @Composable
-fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit) {
+fun QuizScreen(difficulty: Difficulty, onBackClick: () -> Unit, onQuizFinished: (correctCount: Int, totalCount: Int) -> Unit) {
     val viewModel = remember { QuizViewModel(difficulty) }
     val selectedOption by viewModel.selectedOption.collectAsState()
     val currentIndex by viewModel.currentIndex.collectAsState()
     val isAnswerRevealed by viewModel.isAnswerRevealed.collectAsState()
+    val isQuizFinished by viewModel.isQuizFinished.collectAsState()
 
     val quiz = viewModel.currentQuiz
     val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
+    LaunchedEffect(isQuizFinished) {
+        if(isQuizFinished) {
+            onQuizFinished(viewModel.getCorrectAnswerCount(), 10)
+        }
+    }
 
     Column(
         modifier = Modifier
