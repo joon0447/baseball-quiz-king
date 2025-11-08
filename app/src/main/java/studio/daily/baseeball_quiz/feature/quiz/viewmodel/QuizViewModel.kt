@@ -26,11 +26,18 @@ class QuizViewModel(difficulty: Difficulty): ViewModel() {
     private val _isAnswerRevealed = MutableStateFlow(false)
     val isAnswerRevealed: StateFlow<Boolean> = _isAnswerRevealed
 
+    private var correctAnswerCount = 0
+
     fun selectOption(index: Int) {
         _selectedOption.value = index
     }
 
     fun revealAnswer() {
+        if(!_isAnswerRevealed.value) {
+            if(_selectedOption.value == currentQuiz.answerIndex) {
+                correctAnswerCount++
+            }
+        }
         _isAnswerRevealed.value = true
     }
 
